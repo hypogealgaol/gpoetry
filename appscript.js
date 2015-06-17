@@ -1,12 +1,10 @@
 $(document).ready(function() {
-
-
-
 	//Code reference for flickr http requests: http://stackoverflow.com/questions/17071187/get-flickr-images-depending-on-a-search-result
 
-
 	$('#button').live('click', function() {
-		
+
+
+		var parsedJSON; 
 		var textInp = document.getElementById('inputT').value;
 		console.log(textInp); 
 		//alert('worked'); 
@@ -18,22 +16,26 @@ $(document).ready(function() {
  			"nojsoncallback": "1",
   			"text": "<your search text here>"  // This is where you'll put your "file name"
 		}
-
 		options.text = textInp; //get from textbox
 		alert(options.text); 
 
 		flickrRequest(options, function(data) { 
+			parsedJSON = JSON.parse(data); //is definitely json
+			console.log(parsedJSON); 
+			var item = parsedJSON["photos"].photo[1]; 
+			console.log(item); 
 
-			alert(data); 
-		})
+			
+			
 
-		
-
+			//build photo URL
+			var photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg';	
+			//alert(photoURL); 
+		});
 	})//end of button
 
 	var flickrRequest = function(options, cb) {
 		var url, xhr, item, first;
-
 		url = "https://api.flickr.com/services/rest/";
 		first = true;
 
@@ -43,14 +45,12 @@ $(document).ready(function() {
 				first = false;
 			}
 		}
-	
+		//XMLHttpRQ to flickr
 		xhr = new XMLHttpRequest();
 	  	xhr.onload = function() { cb(this.response); };
 	  	xhr.open('get', url, true);
 	  	xhr.send();
 	}
-
-	
 
 }); //end of doc ready
 
