@@ -1,0 +1,47 @@
+body {
+  padding: 50px;
+  font: 14px "Courier New", Helvetica, Arial, sans-serif;
+  font-style: italic;
+  background-color: grey; 
+}
+
+a {
+  color: #00B7FF;
+}
+
+button {
+    border: 0; 
+    position: absolute; 
+    background: transparent; 
+    display: in-line; 
+}
+
+.textInput {
+    color: blue; 
+    font: 14px "Courier New", Helvetica, Arial, sans-serif;
+}
+
+.imgArea {
+    background-color: red; 
+    height: 200px;
+    width: 200px;
+    position: relative; 
+    margin: 3rem auto 1rem auto;
+    display: block; 
+    
+}
+
+textarea {
+    resize: none;
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    margin: 3rem auto 1rem auto;
+    padding: 1rem;
+    border: 11px solid white;
+    outline: none;
+    background-color: transparent;
+    overflow: hidden; 
+
+
+}
