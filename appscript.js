@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	//Code reference for flickr http requests: http://stackoverflow.com/questions/17071187/get-flickr-images-depending-on-a-search-result
+	//Code referenced for flickr http requests: http://stackoverflow.com/questions/17071187/get-flickr-images-depending-on-a-search-result
 
 	$('#button').live('click', function() {
 
@@ -12,7 +12,6 @@ $(document).ready(function() {
 		var options = { 
   			"api_key": "2e48d389d7a260ad8c03dc8ca43fd59d",
   			"method": "flickr.photos.search", // You can replace this with whatever method,
-                                  // flickr.photos.search fits your use case best, though.
   			"format": "json",
  			"nojsoncallback": "1",
   			"text": "<your search text here>"  // This is where you'll put your "file name"
@@ -30,9 +29,17 @@ $(document).ready(function() {
 			var item = parsedJSON["photos"].photo[0]; 
 			console.log(item); 
 
+			var randomSeed = Math.floor(Math.random()*50)+1; 
+
+			var item2 = parsedJSON["photos"].photo[randomSeed]; //finds a random photo
 			//build photo URL
 			var photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg';	
+			var photoURL2 = 'http://farm' + item2.farm + '.static.flickr.com/' + item2.server + '/' + item2.id + '_' + item2.secret + '_m.jpg';	
+
+
 			console.log(photoURL); 
+			console.log(photoURL2); 
+
 		});
 	})//end of button
 
