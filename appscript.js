@@ -19,7 +19,7 @@ $(document).ready(function() {
   			"text": "<your search text here>"  // This is where you'll put your "file name"
 		}
 
-		options.text = textInp; 
+		options.text = textInp; //get from textbox
 		alert(options.text); 
 
 		flickrRequest(options, function(data) { 
