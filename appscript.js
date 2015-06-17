@@ -7,7 +7,8 @@ $(document).ready(function() {
 		var parsedJSON; 
 		var textInp = document.getElementById('inputT').value;
 		console.log(textInp); 
-		//alert('worked'); 
+
+		//for flickr request
 		var options = { 
   			"api_key": "2e48d389d7a260ad8c03dc8ca43fd59d",
   			"method": "flickr.photos.search", // You can replace this with whatever method,
@@ -16,21 +17,22 @@ $(document).ready(function() {
  			"nojsoncallback": "1",
   			"text": "<your search text here>"  // This is where you'll put your "file name"
 		}
+
 		options.text = textInp; //get from textbox
 		alert(options.text); 
 
 		flickrRequest(options, function(data) { 
 			parsedJSON = JSON.parse(data); //is definitely json
 			console.log(parsedJSON); 
-			var item = parsedJSON["photos"].photo[1]; 
-			console.log(item); 
 
-			
-			
+			//change photo 0 to something random 
+			console.log("Num photos " + parsedJSON.photos.photo.length); 
+			var item = parsedJSON["photos"].photo[0]; 
+			console.log(item); 
 
 			//build photo URL
 			var photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg';	
-			//alert(photoURL); 
+			console.log(photoURL); 
 		});
 	})//end of button
 
