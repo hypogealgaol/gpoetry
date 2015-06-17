@@ -8,5 +8,7 @@ Here's the gameplan
 * get an image search result using 'depracated' image search API from textarea
 * load image and readjust the size
 * fill / delete it inline as text is written and erased
+* ...
+* eventually sync w/phonegap
 
 I'm mostly using this to further familiarize myself with CSS/HTML/JS/GAPI
