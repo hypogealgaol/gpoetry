@@ -31,16 +31,27 @@ $(document).ready(function() {
   			"method": "flickr.photos.search", // You can replace this with whatever method,
   			"format": "json",
  			"nojsoncallback": "1",
-  			"text": "<your search text here>"  // This is where you'll put your "file name"
+  			"text": "<your search text here>",  // This is where you'll put your "file name"
+  			"content-type": "7"
+  			//i can use tags as well
+		}
+
+		var feedOptions = {
+			"format":"json",
+			"tags":"<my tag here"
 		}
 
 		options.text = textInp; //get from textbox
+		feedOptions.tags = textInp; 
+
+
 
 		flickrRequest(options, function(data) { 
 			parsedJSON = JSON.parse(data); //is definitely json
+			//console.log(parsedJSON);
 
 			//change photo 0 to something random 
-			console.log("Num photos " + parsedJSON.photos.photo.length); 
+			//console.log("Num photos " + parsedJSON.photos.photo.length);  // is always 100
 			var item = parsedJSON["photos"].photo[0]; 
 
 			var randomSeed = Math.floor(Math.random()*5)+1; //you can use this for item 2
@@ -69,6 +80,13 @@ $(document).ready(function() {
 			*/
 
 		});
+
+		flickrFeedRQ(feedOptions, function(data) {
+			parsedJSON = JSON.parse(data);
+			console.log(parsedJSON); 
+		});
+
+
 	})//end of button
 
 	var flickrRequest = function(options, cb) {
@@ -83,6 +101,23 @@ $(document).ready(function() {
 			}
 		}
 		//XMLHttpRQ to flickr
+		xhr = new XMLHttpRequest();
+	  	xhr.onload = function() { cb(this.response); };
+	  	xhr.open('get', url, true);
+	  	xhr.send();
+	}
+
+	var flickrFeedRQ = function(options, cb) {
+		var url, xhr, item, first;
+		url = "https://api.flickr.com/services/feeds/photos_public.gne";
+		first = true; 
+
+		for (item in options) {
+			if (options.hasOwnProperty(item)) {
+				url += (first ? "?" : "&") + item + "=" + options[item]; //parses to search equest; 
+				first = false;
+			}
+		}
 		xhr = new XMLHttpRequest();
 	  	xhr.onload = function() { cb(this.response); };
 	  	xhr.open('get', url, true);
