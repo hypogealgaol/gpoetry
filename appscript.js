@@ -12,13 +12,9 @@ $(document).ready(function() {
 		imageArea = document.getElementById("imgArea"); 
 		container = document.createElement("div"); 
 		imgp = document.createElement("img"); 
-
 	}
 
-
-
 	$('#button').live('click', function() {
-
 
 		var parsedJSON; 
 		var textInp = document.getElementById('inputT').value;
@@ -38,13 +34,12 @@ $(document).ready(function() {
 
 		var feedOptions = {
 			"format":"json",
-			"tags":"<my tag here"
+			"tags":"<my tag here>",
+			"jsoncallback": "?"
 		}
 
 		options.text = textInp; //get from textbox
 		feedOptions.tags = textInp; 
-
-
 
 		flickrRequest(options, function(data) { 
 			parsedJSON = JSON.parse(data); //is definitely json
@@ -81,12 +76,11 @@ $(document).ready(function() {
 
 		});
 
-		flickrFeedRQ(feedOptions, function(data) {
-			parsedJSON = JSON.parse(data);
-			console.log(parsedJSON); 
-		});
-
-
+		var feedRQ = flickrFeedRQ(feedOptions);
+		$.getJSON(feedRQ).done(function(data) {
+			console.log(data); 
+		})
+		console.log(feedRQ); 
 	})//end of button
 
 	var flickrRequest = function(options, cb) {
@@ -118,10 +112,7 @@ $(document).ready(function() {
 				first = false;
 			}
 		}
-		xhr = new XMLHttpRequest();
-	  	xhr.onload = function() { cb(this.response); };
-	  	xhr.open('get', url, true);
-	  	xhr.send();
+		return url; 
 	}
 
 }); //end of doc ready
