@@ -1,12 +1,29 @@
 $(document).ready(function() {
 	//Code referenced for flickr http requests: http://stackoverflow.com/questions/17071187/get-flickr-images-depending-on-a-search-result
 
+
+	var imageArea;
+	var initImage = 0; 
+	var imgp; 
+	//setting initial variables
+	window.onload = function() {
+
+		//set initial variables for where photo will go 
+		imageArea = document.getElementById("imgArea"); 
+		container = document.createElement("div"); 
+		imgp = document.createElement("img"); 
+
+	}
+
+
+
 	$('#button').live('click', function() {
 
 
 		var parsedJSON; 
 		var textInp = document.getElementById('inputT').value;
 		console.log(textInp); 
+		console.log(imageArea);
 
 		//for flickr request
 		var options = { 
@@ -18,27 +35,38 @@ $(document).ready(function() {
 		}
 
 		options.text = textInp; //get from textbox
-		alert(options.text); 
 
 		flickrRequest(options, function(data) { 
 			parsedJSON = JSON.parse(data); //is definitely json
-			console.log(parsedJSON); 
 
 			//change photo 0 to something random 
 			console.log("Num photos " + parsedJSON.photos.photo.length); 
 			var item = parsedJSON["photos"].photo[0]; 
-			console.log(item); 
 
-			var randomSeed = Math.floor(Math.random()*50)+1; 
+			var randomSeed = Math.floor(Math.random()*5)+1; //you can use this for item 2
 
-			var item2 = parsedJSON["photos"].photo[randomSeed]; //finds a random photo
+			var item = parsedJSON["photos"].photo[randomSeed]; //finds a random photo
 			//build photo URL
 			var photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg';	
-			var photoURL2 = 'http://farm' + item2.farm + '.static.flickr.com/' + item2.server + '/' + item2.id + '_' + item2.secret + '_m.jpg';	
 
 
 			console.log(photoURL); 
-			console.log(photoURL2); 
+			container.appendChild(imgp)	 
+
+			imgp.src = photoURL; 
+
+			//don't need this iff anymore	
+			if (initImage == 0) {
+				imageArea.appendChild(container); 
+			}
+
+			/*force square image? img.onload = function(){
+  				var height = img.height;
+ 			 	var width = img.width;
+			}
+			img.src = url
+
+			*/
 
 		});
 	})//end of button

@@ -12,8 +12,7 @@ a {
 button {
     border: 0; 
     position: absolute; 
-    background: transparent; 
-    display: in-line; 
+    /*background: transparent;*/ 
 }
 
 .textInput {
@@ -21,14 +20,33 @@ button {
     font: 14px "Courier New", Helvetica, Arial, sans-serif;
 }
 
-.imgArea {
+div.imgContainer {
     background-color: red; 
-    height: 200px;
-    width: 200px;
+    height: 500px;
+    width: 500px;
     position: relative; 
     margin: 3rem auto 1rem auto;
     display: block; 
     
+}
+
+#imgArea img {
+    /*max-height:100%; 
+    max-width:100%;
+    display: block;*/
+}
+
+div#imgArea {
+    background-color: blue;
+    /* image area stuff should go in here */ 
+    /*width:400px; /*width of your image*/
+    /*height:400px; /*height of your image*/ 
+    padding:0; /*if your want to padding */
+    margin-left: 50px;
+    margin-top: 50px;
+    position: relative;
+    float: left;
+
 }
 
 textarea {
