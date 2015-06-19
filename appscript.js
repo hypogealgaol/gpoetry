@@ -48,6 +48,11 @@ $(document).ready(function() {
 			//parse json
 			parsedJSON = JSON.parse(data); 
 
+			var allPhotos = parsedJSON["photos"].photo; 
+			var newJSON = findSquareImages(allPhotos); 
+
+			//find square image
+
 			// 100 photos default, can go to 300 in the options
 
 			//build photo URL as per flickr specifies in photoURL var
@@ -71,10 +76,7 @@ $(document).ready(function() {
 				var bigURL = processPhotoSize(data);
 				createPhotoDiv(bigURL); 
 			});			
-
-			//static URL
-			
-
+			//now we want to make sure we only get square images
 		});
 
 	})//end of button
@@ -112,11 +114,31 @@ $(document).ready(function() {
 	}
 
 	createPhotoDiv = function(photoURL) {
-		console.log(photoURL); 
 		container.appendChild(imgp)	 
 		imgp.src = photoURL; 
 		imageArea.appendChild(container); 
 
+	}
+
+	//reparses the json to not include anything that doesn't have square dimensions
+	var findSquareImages = function(photoJSON) {
+		for(var i = 0; i<photoJSON.length; i++) {
+			var item = photoJSON[i]; 
+			var photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg';
+			var dimensions = getMeta(photoURL, function(dimensions) {
+				if(dimensions.w == dimensions.h) {
+				}
+			}); 
+		}
+
+	}
+
+	//stackoverflow answer to get image after loading (doesn't process till after load)
+	var getMeta = function(url, cb){
+		$('<img/>').attr('src', url).load(function() {
+			s = {w:this.width, h:this.height};
+			cb(s); 
+  		});  
 	}
 
 }); //end of doc ready
