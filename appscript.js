@@ -21,50 +21,72 @@ $(document).ready(function() {
 		console.log(textInp); 
 		console.log(imageArea);
 
-		//for flickr request
+		//for flickr request photos.search
 		var options = { 
   			"api_key": "2e48d389d7a260ad8c03dc8ca43fd59d",
   			"method": "flickr.photos.search", // You can replace this with whatever method,
   			"format": "json",
  			"nojsoncallback": "1",
   			"text": "<your search text here>",  // This is where you'll put your "file name"
-  			"content-type": "7"
+  			"content-type": "7",
+  			"extras":"original_format"
   			//i can use tags as well
 		}
 
+		//these are the options for flickrfeed
 		var feedOptions = {
 			"format":"json",
 			"tags":"<my tag here>",
 			"jsoncallback": "?"
 		}
 
+		
+
+		//okay here's what has to happen, get the ID of the individual photo then use another RQ
+		//to get the size of the photo and post that one
+
 		options.text = textInp; //get from textbox
 		feedOptions.tags = textInp; 
 
-		flickrRequest(options, function(data) { 
+
+		//request for simple photo search method
+		flickrRequest(options, 1, function(data) { 
 			parsedJSON = JSON.parse(data); //is definitely json
-			//console.log(parsedJSON);
 
-			//change photo 0 to something random 
-			//console.log("Num photos " + parsedJSON.photos.photo.length);  // is always 100
-			var item = parsedJSON["photos"].photo[0]; 
+			// 100 photos default, can go to 300 in the options
+			//we need to process a new request inside this
 
+			//build photo URL as per flickr
 			var randomSeed = Math.floor(Math.random()*5)+1; //you can use this for item 2
-
 			var item = parsedJSON["photos"].photo[randomSeed]; //finds a random photo
-			//build photo URL
 			var photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg';	
 
+			//options for get sizes method so w can get the biggest picture
+			var sizesOptions = {
+  				"api_key": "2e48d389d7a260ad8c03dc8ca43fd59d",
+  				"method": "flickr.photos.getSizes",
+  				"format": "json",
+  				"nojsoncallback":"1",
+  				"photo_id":"xxx" //fill this in
 
+			}	
+			//rQ for geSizes to find url of biggest picture
+
+			//async call in sync method?
+			sizesOptions.photo_id = item.id; 
+
+			flickrRequest(sizesOptions, 1, function(data) {
+				parsedJSON = JSON.parse(data);
+				console.log(parsedJSON); 
+				processPhotoSize(data); 
+				
+			});			
+
+			//static URL
 			console.log(photoURL); 
 			container.appendChild(imgp)	 
-
 			imgp.src = photoURL; 
-
-			//don't need this iff anymore	
-			if (initImage == 0) {
-				imageArea.appendChild(container); 
-			}
+			imageArea.appendChild(container); 
 
 			/*force square image? img.onload = function(){
   				var height = img.height;
@@ -76,14 +98,23 @@ $(document).ready(function() {
 
 		});
 
+		/*
+		//feed photo
 		var feedRQ = flickrFeedRQ(feedOptions);
-		$.getJSON(feedRQ).done(function(data) {
+		
+		//this is asynchrous so I must process the JSON in this function
+		var feedData = $.getJSON(feedRQ).done(function(data) {
 			console.log(data); 
-		})
-		console.log(feedRQ); 
+			console.log("PHOTO URL: " + data.items[0].link); 
+
+		});
+		*/
+
 	})//end of button
 
-	var flickrRequest = function(options, cb) {
+	var flickrRequest = function(options, xhrRQ, cb) {
+
+
 		var url, xhr, item, first;
 		url = "https://api.flickr.com/services/rest/";
 		first = true;
@@ -95,11 +126,18 @@ $(document).ready(function() {
 			}
 		}
 		//XMLHttpRQ to flickr
-		xhr = new XMLHttpRequest();
-	  	xhr.onload = function() { cb(this.response); };
-	  	xhr.open('get', url, true);
-	  	xhr.send();
+		if(xhrRQ == 1 ) { 
+			xhr = new XMLHttpRequest();
+	  		xhr.onload = function() { cb(this.response); };
+	  		xhr.open('get', url, true);
+	  		xhr.send();
+	  	}
+	  	else {
+
+	  	}
 	}
+
+	var generateFlickrURL = function() {}; 
 
 	var flickrFeedRQ = function(options, cb) {
 		var url, xhr, item, first;
@@ -113,6 +151,13 @@ $(document).ready(function() {
 			}
 		}
 		return url; 
+	}
+
+	var processPhotoSize = function(photoJSON) {
+		console.log(photoJSON); 
+		var last = photoJSON.sizes.size.length;
+		console.log(photoJSON.sizes.size[last-1].source);
+		return photoJSON.sizes.size[last-1].source;
 	}
 
 }); //end of doc ready
