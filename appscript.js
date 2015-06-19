@@ -29,7 +29,8 @@ $(document).ready(function() {
  			"nojsoncallback": "1",
   			"text": "<your search text here>",  // This is where you'll put your "file name"
   			"content-type": "7",
-  			"extras":"original_format"
+  			"extras":"original_format",
+  			"per_page":"150" /* max 500 */ 
   			//i can use tags as well
 		}
 
@@ -82,18 +83,14 @@ $(document).ready(function() {
 	})//end of button
 
 	var flickrRequest = function(options, cb) {
-
 		var url = generateFlickrPhotoURL(options); 
-
 		var xhr = new XMLHttpRequest();
   		xhr.onload = function() { cb(this.response); };
   		xhr.open('get', url, true);
 		xhr.send();
-
 	}
 
 	var generateFlickrPhotoURL = function(options) {
-
 		var url, item, first;
 		url = "https://api.flickr.com/services/rest/";
 		first = true;
@@ -117,7 +114,6 @@ $(document).ready(function() {
 		container.appendChild(imgp)	 
 		imgp.src = photoURL; 
 		imageArea.appendChild(container); 
-
 	}
 
 	//reparses the json to not include anything that doesn't have square dimensions
@@ -125,20 +121,24 @@ $(document).ready(function() {
 		for(var i = 0; i<photoJSON.length; i++) {
 			var item = photoJSON[i]; 
 			var photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg';
-			var dimensions = getMeta(photoURL, function(dimensions) {
-				if(dimensions.w == dimensions.h) {
-				}
-			}); 
+			getMeta(photoURL)
 		}
+		console.log(photoJSON); 
 
 	}
 
 	//stackoverflow answer to get image after loading (doesn't process till after load)
-	var getMeta = function(url, cb){
+	var getMeta = function(url){
 		$('<img/>').attr('src', url).load(function() {
 			s = {w:this.width, h:this.height};
-			cb(s); 
+			spliceArray(s); 
   		});  
+	}
+
+	var spliceArray = function() {
+		if(s.w !== s.h) {
+			//we want to splice the json so return something?
+		}
 	}
 
 }); //end of doc ready
