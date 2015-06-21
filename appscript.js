@@ -29,7 +29,7 @@ $(document).ready(function() {
  			"nojsoncallback": "1",
   			"text": "<your search text here>",  // This is where you'll put your "file name"
   			"content-type": "7",
-  			"extras":"original_format",
+  			"extras":"url_o",
   			"per_page":"150" /* max 500 */ 
   			//i can use tags as well
 		}
